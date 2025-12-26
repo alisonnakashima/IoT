@@ -1,0 +1,294 @@
+[
+    {
+        "id": "899f8a3ad267e02f",
+        "type": "tab",
+        "label": "Fluxo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "http_in_leituras",
+        "type": "http in",
+        "z": "899f8a3ad267e02f",
+        "name": "POST Leituras ESP32",
+        "url": "/leituras",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 340,
+        "y": 660,
+        "wires": [
+            [
+                "json_leituras",
+                "cd0b3b819235b6d0"
+            ]
+        ]
+    },
+    {
+        "id": "json_leituras",
+        "type": "json",
+        "z": "899f8a3ad267e02f",
+        "name": "JSON",
+        "property": "payload",
+        "action": "obj",
+        "pretty": true,
+        "x": 550,
+        "y": 660,
+        "wires": [
+            [
+                "func_formatar",
+                "4fe7de35ea5575b5"
+            ]
+        ]
+    },
+    {
+        "id": "func_formatar",
+        "type": "function",
+        "z": "899f8a3ad267e02f",
+        "name": "Formatar Leituras",
+        "func": "msg.payload = {\n  ultima: {\n    umidadeSolo: msg.payload.leituras.ultima.umidadeSolo,\n    temperatura: msg.payload.leituras.ultima.temperatura,\n    umidadeAr: msg.payload.leituras.ultima.umidadeAr,\n    nivelAgua: msg.payload.leituras.ultima.nivelAgua,\n    irrigacao: msg.payload.leituras.ultima.irrigacao\n  }\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 750,
+        "y": 660,
+        "wires": [
+            [
+                "http_firebase_put",
+                "9e53e697765582a9"
+            ]
+        ]
+    },
+    {
+        "id": "http_firebase_put",
+        "type": "http request",
+        "z": "899f8a3ad267e02f",
+        "name": "Firebase PUT Leituras",
+        "method": "PUT",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://irrigacao-iot-9a204-default-rtdb.firebaseio.com/leituras.json",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 1000,
+        "y": 660,
+        "wires": [
+            [
+                "http_response_leituras",
+                "5286f8593ecd7451"
+            ]
+        ]
+    },
+    {
+        "id": "http_response_leituras",
+        "type": "http response",
+        "z": "899f8a3ad267e02f",
+        "name": "HTTP Response:",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1250,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "http_in_comando",
+        "type": "http in",
+        "z": "899f8a3ad267e02f",
+        "name": "ESP32 - GET Comandos ",
+        "url": "/comandos",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 370,
+        "y": 840,
+        "wires": [
+            [
+                "http_firebase_get",
+                "4cc0d78907bdbfd2"
+            ]
+        ]
+    },
+    {
+        "id": "http_firebase_get",
+        "type": "http request",
+        "z": "899f8a3ad267e02f",
+        "name": "Firebase GET Comando",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://irrigacao-iot-9a204-default-rtdb.firebaseio.com/comandos.json",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 630,
+        "y": 840,
+        "wires": [
+            [
+                "func_comando",
+                "55ee0899bf94a7f4"
+            ]
+        ]
+    },
+    {
+        "id": "func_comando",
+        "type": "function",
+        "z": "899f8a3ad267e02f",
+        "name": "Formatar Comando",
+        "func": "msg.payload = { \n     modo: msg.payload?.irrigacao.modo\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 890,
+        "y": 840,
+        "wires": [
+            [
+                "http_response_comando",
+                "b939ecd3715392cd"
+            ]
+        ]
+    },
+    {
+        "id": "http_response_comando",
+        "type": "http response",
+        "z": "899f8a3ad267e02f",
+        "name": "HTTP Response:",
+        "statusCode": "200",
+        "headers": {},
+        "x": 1130,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "cd0b3b819235b6d0",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "4fe7de35ea5575b5",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "9e53e697765582a9",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "5286f8593ecd7451",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1160,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "4cc0d78907bdbfd2",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "55ee0899bf94a7f4",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 800,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "b939ecd3715392cd",
+        "type": "debug",
+        "z": "899f8a3ad267e02f",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 900,
+        "wires": []
+    }
+]

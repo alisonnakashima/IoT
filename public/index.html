@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Monitoramento de Irrigação</title>
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Firebase COMPAT -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.3/firebase-database-compat.js"></script>
+</head>
+
+<body>
+  <div class="overlay">
+    <h1>🌱 Monitoramento de Irrigação</h1>
+
+    <div class="cards">
+      <div class="card">🌾 Umidade do Solo: <span id="solo">--</span>%</div>
+      <div class="card">🌡 Temperatura: <span id="temp">--</span> °C</div>
+      <div class="card">💧 Umidade do Ar: <span id="ar">--</span> %</div>
+      <div class="card">🚰 Nível do Reservatório: <span id="agua">--</span> L</div>
+      <div class="card">🚿 Irrigação: <span id="status">--</span></div>
+    </div>
+
+    <button id="btnIrrigar">Ligar Irrigação</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
